@@ -20,7 +20,10 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
         self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
 
     def get_settings_defaults(self):
-        return dict(url="https://en.wikipedia.org/wiki/Hello_world")
+        return dict(url="192.168.178.57")
+
+    def get_template_vars(self):
+        return dict(url=self._settings.get(["url"]))
 
     # ~~ AssetPlugin mixin
 
