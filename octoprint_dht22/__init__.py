@@ -10,6 +10,7 @@ from __future__ import absolute_import
 # Take a look at the documentation on what other plugin mixins are available.
 
 import octoprint.plugin
+import requests
 
 
 class Dht22Plugin(octoprint.plugin.SettingsPlugin,
@@ -59,6 +60,21 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
                 "pip": "https://github.com/N30Z/OctoPrint-Dht22/archive/{target_version}.zip",
             }
         }
+
+    def _fetch_value_from_website(self):
+        # Fetch the value from the website
+        try:
+            # Assuming you're fetching the value using requests library
+            url = self._settings.get(["website_url"])
+            response = requests.get(url)
+            if response.status_code == 200:
+                return response.text
+            else:
+                self._logger.error("Failed to fetch value from website. Status code: %d", response.status_code)
+                return None
+        except Exception as e:
+            self._logger.error("Failed to fetch value from website: %s", str(e))
+            return None
 
 
 # If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py
