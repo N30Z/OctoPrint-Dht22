@@ -1,24 +1,36 @@
-/*
- * View model for OctoPrint-Dht22
- *
- * Author: Jan Feddern
- * License: AGPLv3
- */
 $(function() {
-    function Dht22ViewModel(parameters) {
-        var self = this;
+    function fetchArduinoData() {
+        $.get("/plugin/dht22_tab/arduino_data", function(data) {
+            var tempMatch = data.match(/Temperatur: ([\d.]+) &deg;C/);
+            var humidityMatch = data.match(/Luftfeuchtigkeit: ([\d.]+) %/);
 
-        // assign the injected parameters, e.g.:
-        // self.loginStateViewModel = parameters[0];
-        // self.settingsViewModel = parameters[1];
+            if (tempMatch && humidityMatch) {
+                var temperature = parseFloat(tempMatch[1]);
+                var humidity = parseFloat(humidityMatch[1]);
 
-        // TODO: Implement your plugin's view model here.
+                $("#navbar_temperature").text(temperature);
+                $("#navbar_humidity").text(humidity);
+
+                addLogMessage("Data fetched successfully from Arduino.");
+            } else {
+                addLogMessage("Failed to parse data from Arduino.");
+            }
+        }).fail(function() {
+            addLogMessage("Failed to fetch data from Arduino.");
+        });
     }
 
-    /* view model class, parameters for constructor, container to bind to
-     * Please see http://docs.octoprint.org/en/master/plugins/viewmodels.html#registering-custom-viewmodels for more details
-     * and a full list of the available options.
-     */
+    function addLogMessage(message) {
+        var logElement = $("#dht22_log");
+        var currentTime = new Date().toLocaleTimeString();
+        logElement.append("<div>[" + currentTime + "] " + message + "</div>");
+        logElement.scrollTop(logElement.prop("scrollHeight"));
+    }
+
+    fetchArduinoData();
+    setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
+});
+
     OCTOPRINT_VIEWMODELS.push({
         construct: Dht22ViewModel,
         // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
