@@ -22,9 +22,11 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
     def get_settings_defaults(self):
         return dict(url="192.168.178.57")
 
-    def get_template_vars(self):
-        return dict(url=self._settings.get(["url"]))
-
+    def get_template_configs(self):
+        return [
+            dict(type="navbar", custom_bindings=False),
+            dict(type="settings", custom_bindings=False)
+        ]
     # ~~ AssetPlugin mixin
 
     def get_assets(self):
