@@ -13,9 +13,13 @@ $(function() {
 
                 addLogMessage("Data fetched successfully from Arduino.");
             } else {
+                $("#navbar_temperature").text("--");
+                $("#navbar_humidity").text("--");
                 addLogMessage("Failed to parse data from Arduino.");
             }
         }).fail(function() {
+            $("#navbar_temperature").text("--");
+            $("#navbar_humidity").text("--");
             addLogMessage("Failed to fetch data from Arduino.");
         });
     }
@@ -30,12 +34,3 @@ $(function() {
     fetchArduinoData();
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
 });
-
-//    OCTOPRINT_VIEWMODELS.push({
-//        construct: Dht22ViewModel,
-        // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
-//        dependencies: [ /* "loginStateViewModel", "settingsViewModel" */ ],
-        // Elements to bind to, e.g. #settings_plugin_dht22, #tab_plugin_dht22, ...
-//        elements: [ /* ... */ ]
-//    });
-//});
