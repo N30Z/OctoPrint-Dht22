@@ -20,7 +20,7 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
         self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
 
     def get_settings_defaults(self):
-        return dict(url="192.168.178.21/Tim.html")
+        return dict(url="http://192.168.178.21/Tim.html")
 
     # ~~ AssetPlugin mixin
 
