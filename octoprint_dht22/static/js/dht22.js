@@ -31,11 +31,11 @@ $(function() {
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
 });
 
-    OCTOPRINT_VIEWMODELS.push({
-        construct: Dht22ViewModel,
+//    OCTOPRINT_VIEWMODELS.push({
+//        construct: Dht22ViewModel,
         // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
-        dependencies: [ /* "loginStateViewModel", "settingsViewModel" */ ],
+//        dependencies: [ /* "loginStateViewModel", "settingsViewModel" */ ],
         // Elements to bind to, e.g. #settings_plugin_dht22, #tab_plugin_dht22, ...
-        elements: [ /* ... */ ]
-    });
-});
+//        elements: [ /* ... */ ]
+//    });
+//});

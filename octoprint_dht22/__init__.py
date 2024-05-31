@@ -29,8 +29,8 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
         # core UI here.
         return {
             "js": ["js/dht22.js"],
-            "css": ["css/dht22.css"],
-            "less": ["less/dht22.less"]
+            # "css": ["css/dht22.css"],
+            # "less": ["less/dht22.less"]
         }
 
     # ~~ Softwareupdate hook
