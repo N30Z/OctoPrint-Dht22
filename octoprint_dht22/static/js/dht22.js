@@ -25,11 +25,9 @@ $(function() {
     }
 
     function addLogMessage(message) {
-        var logElement = $("#dht22_log");
-        if (logElement.length > 0) { // Only update the log if it exists
-            var currentTime = new Date().toLocaleTimeString();
-            logElement.append("<div>[" + currentTime + "] " + message + "</div>");
-            logElement.scrollTop(logElement.prop("scrollHeight"));
+        $.get("/plugin/dht22_tab/arduino_data", function(data) {
+            $("#dht22_tab iframe").contents().find('body').html(data);
+            $("#dht22_topbar").html(data);
         }
     }
 
