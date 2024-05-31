@@ -26,11 +26,26 @@ $(function() {
 
     function addLogMessage(message) {
         var logElement = $("#dht22_log");
-        var currentTime = new Date().toLocaleTimeString();
-        logElement.append("<div>[" + currentTime + "] " + message + "</div>");
-        logElement.scrollTop(logElement.prop("scrollHeight"));
+        if (logElement.length > 0) { // Only update the log if it exists
+            var currentTime = new Date().toLocaleTimeString();
+            logElement.append("<div>[" + currentTime + "] " + message + "</div>");
+            logElement.scrollTop(logElement.prop("scrollHeight"));
+        }
+    }
+
+    // Update the iframe src with the log content
+    function updateLogIframe() {
+        var logContent = $("#dht22_log").html();
+        var iframe = document.getElementById("dht22_log_iframe");
+        if (iframe) {
+            var doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(logContent);
+            doc.close();
+        }
     }
 
     fetchArduinoData();
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
+    setInterval(updateLogIframe, 10000); // Update the iframe log every 10 seconds
 });
