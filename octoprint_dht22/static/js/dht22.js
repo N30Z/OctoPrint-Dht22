@@ -1,45 +1,36 @@
 $(function() {
     function fetchArduinoData() {
-        $.get("/plugin/dht22_tab/arduino_data", function(data) {
-            var tempMatch = data.match(/Temperatur: ([\d.]+) &deg;C/);
-            var humidityMatch = data.match(/Luftfeuchtigkeit: ([\d.]+) %/);
-
-            if (tempMatch && humidityMatch) {
-                var temperature = parseFloat(tempMatch[1]);
-                var humidity = parseFloat(humidityMatch[1]);
-
-                $("#navbar_temperature").text(temperature);
-                $("#navbar_humidity").text(humidity);
-
-                addLogMessage("Data fetched successfully from Arduino.");
-            } else {
-                $("#navbar_temperature").text("--");
-                $("#navbar_humidity").text("--");
-                addLogMessage("Failed to parse data from Arduino.");
+        $.ajax({
+            url: API_BASEURL + "plugin/dht22",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify({
+                command: "fetch_data",
+            }),
+            contentType: "application/json; charset=UTF-8",
+            success: function(response) {
+                updateNavbarValues(response);
+                $("#dht22_log").html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch data from Arduino:", error);
             }
-        }).fail(function() {
-            $("#navbar_temperature").text("--");
-            $("#navbar_humidity").text("--");
-            addLogMessage("Failed to fetch data from Arduino.");
         });
     }
 
-    function addLogMessage(message) {
-        var logElement = $("#dht22_log");
-        var currentTime = new Date().toLocaleTimeString();
-        logElement.append("<div>[" + currentTime + "] " + message + "</div>");
-        logElement.scrollTop(logElement.prop("scrollHeight"));
+    function updateNavbarValues(data) {
+        var tempMatch = data.match(/Temperatur: ([\d.]+) °C/);
+        var humidityMatch = data.match(/Luftfeuchtigkeit: ([\d.]+) %/);
 
-        updateLogIframe(logElement.html());
-    }
+        if (tempMatch && humidityMatch) {
+            var temperature = parseFloat(tempMatch[1]);
+            var humidity = parseFloat(humidityMatch[1]);
 
-    function updateLogIframe(logContent) {
-        var iframe = document.getElementById("dht22_log_iframe");
-        if (iframe) {
-            var doc = iframe.contentDocument || iframe.contentWindow.document;
-            doc.open();
-            doc.write("<html><body>" + logContent + "</body></html>");
-            doc.close();
+            $("#navbar_temperature").text(temperature.toFixed(2));
+            $("#navbar_humidity").text(humidity.toFixed(2));
+        } else {
+            $("#navbar_temperature").text("--");
+            $("#navbar_humidity").text("--");
         }
     }
 

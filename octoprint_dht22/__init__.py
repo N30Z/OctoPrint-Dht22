@@ -2,11 +2,13 @@
 from __future__ import absolute_import
 import octoprint.plugin
 import requests
+from flask import make_response
 
 
 class Dht22Plugin(octoprint.plugin.SettingsPlugin,
                   octoprint.plugin.AssetPlugin,
-                  octoprint.plugin.TemplatePlugin):
+                  octoprint.plugin.TemplatePlugin,
+                  octoprint.plugin.SimpleApiPlugin):
 
     def on_after_startup(self):
         self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
@@ -52,6 +54,17 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
             dict(type="settings", template="dht22_settings.jinja2"),
             dict(type="tab", template="dht22_tab.jinja2", custom_bindings=False),
         ]
+
+    def get_api_commands(self):
+        return dict(fetch_data=[])
+
+    def on_api_command(self, command, data):
+        if command == "fetch_data":
+            response = self._fetch_value_from_website()
+            if response:
+                return make_response(response, 200)
+            else:
+                return make_response("Failed to fetch data from Arduino.", 500)
 
 
 __plugin_name__ = "Dht22 Plugin"
