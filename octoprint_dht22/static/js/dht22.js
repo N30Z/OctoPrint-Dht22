@@ -39,13 +39,28 @@ $(function() {
     }
 
     function addLogMessage(message) {
-        var iframe = document.getElementById("dht22_tab").querySelector("iframe");
-        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        var logElement = iframeDoc.getElementById("dht22_log");
-        var currentTime = new Date().toLocaleTimeString();
-        logElement.innerHTML += "<div>[" + currentTime + "] " + message + "</div>";
-        logElement.scrollTop = logElement.scrollHeight;
+    var iframe = document.getElementById("dht22_tab").querySelector("iframe");
+    if (!iframe) {
+        console.error("Iframe not found");
+        return;
     }
+
+    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!iframeDoc) {
+        console.error("Iframe document not found");
+        return;
+    }
+
+    var logElement = iframeDoc.getElementById("dht22_log");
+    if (!logElement) {
+        console.error("Log element not found in iframe");
+        return;
+    }
+
+    var currentTime = new Date().toLocaleTimeString();
+    logElement.innerHTML += "<div>[" + currentTime + "] " + message + "</div>";
+    logElement.scrollTop = logElement.scrollHeight;
+}
 
     fetchArduinoData();
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
