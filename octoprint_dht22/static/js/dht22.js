@@ -29,18 +29,13 @@ $(function() {
 
             $("#navbar_temperature").text(temperature.toFixed(2));
             $("#navbar_humidity").text(humidity.toFixed(2));
-            addLogMessage("Data fetched successfully from: " + apiUrl);
+            addLogMessage("Data fetched successfully from API.");
             addLogMessage("Temperature: " + temperature + "°C, Humidity: " + humidity + "%");
         } else {
-                $("#navbar_temperature").text("--");
-                $("#navbar_humidity").text("--");
-                addLogMessage("Failed to parse data from: " + apiUrl);
-        }
-        }.fail(function() {
             $("#navbar_temperature").text("--");
             $("#navbar_humidity").text("--");
-            addLogMessage("Failed to fetch data from: " + apiUrl);
-        });
+            addLogMessage("Failed to parse data from API.");
+        }
     }
 
     function addLogMessage(message) {
@@ -50,8 +45,7 @@ $(function() {
         var currentTime = new Date().toLocaleTimeString();
         logElement.innerHTML += "<div>[" + currentTime + "] " + message + "</div>";
         logElement.scrollTop = logElement.scrollHeight;
-        }
-
+    }
 
     fetchArduinoData();
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
