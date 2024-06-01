@@ -25,25 +25,24 @@ $(function() {
     }
 
     function addLogMessage(message) {
-        $.get("/plugin/dht22_tab/arduino_data", function(data) {
-            $("#dht22_tab iframe").contents().find('body').html(data);
-            $("#dht22_topbar").html(data);
-        }
+        var logElement = $("#dht22_log");
+        var currentTime = new Date().toLocaleTimeString();
+        logElement.append("<div>[" + currentTime + "] " + message + "</div>");
+        logElement.scrollTop(logElement.prop("scrollHeight"));
+
+        updateLogIframe(logElement.html());
     }
 
-    // Update the iframe src with the log content
-    function updateLogIframe() {
-        var logContent = $("#dht22_log").html();
+    function updateLogIframe(logContent) {
         var iframe = document.getElementById("dht22_log_iframe");
         if (iframe) {
             var doc = iframe.contentDocument || iframe.contentWindow.document;
             doc.open();
-            doc.write(logContent);
+            doc.write("<html><body>" + logContent + "</body></html>");
             doc.close();
         }
     }
 
     fetchArduinoData();
     setInterval(fetchArduinoData, 10000); // Default refresh rate of 10 seconds
-    setInterval(updateLogIframe, 10000); // Update the iframe log every 10 seconds
 });
