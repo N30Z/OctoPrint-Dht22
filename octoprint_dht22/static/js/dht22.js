@@ -36,7 +36,7 @@ $(function() {
                 $("#navbar_humidity").text("--");
                 addLogMessage("Failed to parse data from: " + apiUrl);
         }
-        }).fail(function() {
+        }.fail(function() {
             $("#navbar_temperature").text("--");
             $("#navbar_humidity").text("--");
             addLogMessage("Failed to fetch data from: " + apiUrl);
