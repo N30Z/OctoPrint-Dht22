@@ -11,8 +11,9 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
                   octoprint.plugin.SimpleApiPlugin):
 
     def on_after_startup(self):
-        self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
         url = self._settings.get(["url"])
+        self._logger.info("Hello World! (more: %s)" % url)
+        self._logger.info("Current URL: %s" % url)  # Normal log message
 
     def get_settings_defaults(self):
         return dict(url="192.168.178.21/Tim.html")
@@ -56,6 +57,12 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
         except requests.RequestException as e:
             self._logger.error("Failed to fetch data from Arduino: %s" + "adress:", url, e)
             return str(e), 500
+
+    @octoprint.plugin.BlueprintPlugin.route("/initial_log", methods=["GET"])
+    def get_initial_log(self):
+        url = self._settings.get(["url"])
+        log_message = f"Current URL: {url}"
+        return make_response(log_message, 200)
 
     def get_template_configs(self):
         return [
