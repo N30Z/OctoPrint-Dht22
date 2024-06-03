@@ -12,9 +12,18 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
 
     def on_after_startup(self):
         self._logger.info("Hello World! (more: %s)" % self._settings.get(["url"]))
+        url = self._settings.get(["url"])
 
     def get_settings_defaults(self):
         return dict(url="http://192.168.178.21/Tim.html")
+
+    def on_settings_save(self, data):
+        old_ip = self._settings.get(["url"])
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+        url = self._settings.get(["url"])
+
+        if old_ip != url:
+            self._logger.info(f"Url changed from {old_ip} to {url}")
 
     def get_assets(self):
         return {
