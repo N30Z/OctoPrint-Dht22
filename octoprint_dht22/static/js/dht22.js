@@ -1,21 +1,23 @@
 $(function() {
     function fetchArduinoData() {
-        $.ajax({
-            url: API_BASEURL + "plugin/dht22",
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify({
-                command: "fetch_data",
-            }),
-            contentType: "application/json; charset=UTF-8",
-            success: function(response) {
-                updateNavbarValues(response);
-                $("#dht22_log").html(response);
-            },
-            error: function(xhr, status, error) {
-                addLogMessage("Failed to fetch data from Arduino.");
-                console.error("Failed to fetch data from Arduino:", error);
+        url = self._settings.get(["url"])
+        $.get("/plugin/dht22_tab/arduino_data", function(data) {
+            var tempMatch = data.match(/Temperatur: ([\d.]+) &deg;C/);
+            var humidityMatch = data.match(/Luftfeuchtigkeit: ([\d.]+) %/);
+
+            if (tempMatch && humidityMatch) {
+                var temperature = parseFloat(tempMatch[1]);
+                var humidity = parseFloat(humidityMatch[1]);
+
+                $("#navbar_temperature").text(temperature);
+                $("#navbar_humidity").text(humidity);
+
+                addLogMessage("Data fetched successfully from Arduino.");
+            } else {
+                addLogMessage("Failed to parse data from Arduino." + "adress:", url);
             }
+        }).fail(function() {
+            addLogMessage("Failed to fetch data from Arduino." + "adress:", url);
         });
     }
 
