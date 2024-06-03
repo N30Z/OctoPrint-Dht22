@@ -43,8 +43,7 @@ $(function() {
         var currentTime = new Date().toLocaleTimeString();
         logElement.append("<div>[" + currentTime + "] " + message + "</div>");
         logElement.scrollTop(logElement.prop("scrollHeight"));
-    };
-}
+    }
 
 
     fetchArduinoData();
