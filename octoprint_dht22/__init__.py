@@ -15,7 +15,7 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
         url = self._settings.get(["url"])
 
     def get_settings_defaults(self):
-        return dict(url="http://192.168.178.21/Tim.html")
+        return dict(url="192.168.178.21/Tim.html")
 
     def on_settings_save(self, data):
         old_ip = self._settings.get(["url"])
@@ -44,18 +44,18 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
             }
         }
 
-    def _fetch_value_from_website(self):
+    @octoprint.plugin.BlueprintPlugin.route("/arduino_data", methods=["GET"])
+    def get_arduino_data(self):
+        url = self._settings.get(["url"])
         try:
-            url = self._settings.get(["url"])
-            response = requests.get(url)
-            if response.status_code == 200:
-                return response.text
-            else:
-                self._logger.error("Failed to fetch value from website. Status code: %d", response.status_code)
-                return None
-        except Exception as e:
-            self._logger.error("Failed to fetch value from website: %s", str(e))
-            return None
+            response = requests.get(f"http://{url}")
+            response.raise_for_status()
+            data = response.text
+            self._logger.info(data)
+            return data, 200
+        except requests.RequestException as e:
+            self._logger.error("Failed to fetch data from Arduino: %s" + "adress:", url, e)
+            return str(e), 500
 
     def get_template_configs(self):
         return [
