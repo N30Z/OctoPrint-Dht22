@@ -1,6 +1,6 @@
 $(function() {
     function fetchArduinoData() {
-        $.get("/plugin/dht22_tab/arduino_data", function(data) {
+        $.get("/plugin/dht22/arduino_data", function(data) {
             var tempMatch = data.match(/Temperatur: ([\d.]+) &deg;C/);
             var humidityMatch = data.match(/Luftfeuchtigkeit: ([\d.]+) %/);
 
