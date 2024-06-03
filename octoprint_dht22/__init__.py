@@ -47,15 +47,15 @@ class Dht22Plugin(octoprint.plugin.SettingsPlugin,
 
     @octoprint.plugin.BlueprintPlugin.route("/arduino_data", methods=["GET"])
     def get_arduino_data(self):
-        url = self._settings.get(["url"])
+        arduino_ip = self._settings.get(["arduino_ip"])
         try:
-            response = requests.get(f"http://{url}")
+            response = requests.get(f"http://{arduino_ip}")
             response.raise_for_status()
             data = response.text
             self._logger.info(data)
             return data, 200
         except requests.RequestException as e:
-            self._logger.error("Failed to fetch data from Arduino: %s" + "adress:", url, e)
+            self._logger.error("Failed to fetch data from Arduino: %s", e)
             return str(e), 500
 
     @octoprint.plugin.BlueprintPlugin.route("/initial_log", methods=["GET"])
